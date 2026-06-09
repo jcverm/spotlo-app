@@ -25,6 +25,16 @@
     }
     .primary { background: var(--blue); color: #fff; }
     .ghost { background: #fff; color: var(--blue); border: 1px solid var(--blue); }
+    .codewrap { margin: 18px 0 4px; }
+    .codelabel { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+    .code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 24px; font-weight: 700; letter-spacing: 2px; color: var(--blue);
+      background: #f2f6f8; border: 1px dashed var(--blue); border-radius: 12px;
+      padding: 14px 16px; width: 100%; cursor: pointer;
+    }
+    .copied { color: var(--blue); font-size: 13px; height: 16px; margin: 6px 0 0; opacity: 0; transition: opacity .2s; }
+    .copied.show { opacity: 1; }
     .hint { color: var(--muted); font-size: 13px; margin-top: 18px; line-height: 1.4; }
     .wordmark { font-weight: 800; letter-spacing: 0.5px; }
   </style>
@@ -41,6 +51,12 @@
 
     <a class="btn primary" id="openBtn" href="#">Ouvrir dans Spotlo</a>
     <a class="btn ghost" id="storeBtn" href="#">Télécharger sur l'App Store</a>
+
+    <div class="codewrap" id="codewrap" style="display:none;">
+      <p class="codelabel">Ton code</p>
+      <button class="code" id="codeBtn" type="button"></button>
+      <p class="copied" id="copied">Copié</p>
+    </div>
 
     <p class="hint" id="hint">Si l'app est installée, elle s'ouvre toute seule.</p>
   </div>
@@ -79,12 +95,34 @@
         e.preventDefault(); goStore();
       });
 
+      // Code affiche, copiable. Sert au premier install : le lien d'origine
+      // n'est pas transmis a l'app installee depuis l'App Store.
+      if (token) {
+        var codeBtn = document.getElementById("codeBtn");
+        codeBtn.textContent = token;
+        document.getElementById("codewrap").style.display = "block";
+        codeBtn.addEventListener("click", function () {
+          function done() {
+            var c = document.getElementById("copied");
+            c.classList.add("show");
+            setTimeout(function () { c.classList.remove("show"); }, 1500);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(token).then(done).catch(function () {});
+          } else {
+            done();
+          }
+        });
+      }
+
+      // Tentative d'ouverture automatique de l'app.
       var fellBack = false;
       function fallback() {
         if (fellBack) return;
         fellBack = true;
         if (STORE_READY) goStore();
       }
+      // Si la page passe en arriere-plan, l'app s'est ouverte : on annule le repli.
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) fellBack = true;
       });
@@ -95,10 +133,9 @@
         setTimeout(fallback, 1600);
       });
 
-      if (!STORE_READY) {
-        document.getElementById("hint").textContent =
-          "Si l'app est installée, elle s'ouvre toute seule. Sinon, elle arrive bientôt sur l'App Store.";
-      }
+      document.getElementById("hint").textContent = token
+        ? "Pas encore l'app ? Installe-la, puis rouvre ce lien ou saisis ce code dans l'app."
+        : "Si l'app est installée, elle s'ouvre toute seule.";
     })();
   </script>
 </body>
