@@ -47,18 +47,18 @@
     </svg>
 
     <h1><span class="wordmark">Spotlo</span></h1>
-    <p class="lead" id="lead">On t'a partagé quelque chose sur Spotlo.</p>
+    <p class="lead" id="lead"></p>
 
-    <a class="btn primary" id="openBtn" href="#">Ouvrir dans Spotlo</a>
-    <a class="btn ghost" id="storeBtn" href="#">Télécharger sur l'App Store</a>
+    <a class="btn primary" id="openBtn" href="#"></a>
+    <a class="btn ghost" id="storeBtn" href="#"></a>
 
     <div class="codewrap" id="codewrap" style="display:none;">
-      <p class="codelabel">Ton code</p>
+      <p class="codelabel" id="codelabel"></p>
       <button class="code" id="codeBtn" type="button"></button>
-      <p class="copied" id="copied">Copié</p>
+      <p class="copied" id="copied"></p>
     </div>
 
-    <p class="hint" id="hint">Si l'app est installée, elle s'ouvre toute seule.</p>
+    <p class="hint" id="hint"></p>
   </div>
 
   <script>
@@ -68,17 +68,68 @@
       var STORE_READY = false; // passe a true quand APP_STORE_URL est le vrai lien
       // -----------------------------------------------------
 
+      var STR = {
+        fr: {
+          leadDefault: "On t'a partagé quelque chose sur Spotlo.",
+          leads: {
+            invite: "Tu as reçu une invitation à rejoindre une communauté sur Spotlo.",
+            place: "On t'a partagé un lieu sur Spotlo.",
+            visit: "On t'a partagé une visite sur Spotlo.",
+            album: "On t'a partagé un carnet sur Spotlo."
+          },
+          open: "Ouvrir dans Spotlo",
+          store: "Télécharger sur l'App Store",
+          codeLabel: "Ton code",
+          copied: "Copié",
+          hintInstalled: "Si l'app est installée, elle s'ouvre toute seule.",
+          hintInstall: "Pas encore l'app ? Installe-la, puis rouvre ce lien ou saisis ce code dans l'app."
+        },
+        en: {
+          leadDefault: "Something was shared with you on Spotlo.",
+          leads: {
+            invite: "You've been invited to join a community on Spotlo.",
+            place: "A place was shared with you on Spotlo.",
+            visit: "A visit was shared with you on Spotlo.",
+            album: "A notebook was shared with you on Spotlo."
+          },
+          open: "Open in Spotlo",
+          store: "Download on the App Store",
+          codeLabel: "Your code",
+          copied: "Copied",
+          hintInstalled: "If the app is installed, it opens on its own.",
+          hintInstall: "Don't have the app yet? Install it, then reopen this link or enter this code in the app."
+        },
+        it: {
+          leadDefault: "Ti è stato condiviso qualcosa su Spotlo.",
+          leads: {
+            invite: "Hai ricevuto un invito a unirti a una comunità su Spotlo.",
+            place: "Ti è stato condiviso un luogo su Spotlo.",
+            visit: "Ti è stata condivisa una visita su Spotlo.",
+            album: "Ti è stato condiviso un taccuino su Spotlo."
+          },
+          open: "Apri in Spotlo",
+          store: "Scarica su App Store",
+          codeLabel: "Il tuo codice",
+          copied: "Copiato",
+          hintInstalled: "Se l'app è installata, si apre da sola.",
+          hintInstall: "Non hai ancora l'app? Installala, poi riapri questo link o inserisci questo codice nell'app."
+        }
+      };
+
+      var nav = (navigator.language || navigator.userLanguage || "fr").toLowerCase();
+      var lang = nav.indexOf("fr") === 0 ? "fr" : nav.indexOf("it") === 0 ? "it" : "en";
+      var S = STR[lang];
+      document.documentElement.lang = lang;
+
       var params = new URLSearchParams(location.search);
       var type = params.get("type");
       var token = params.get("token");
 
-      var leads = {
-        invite: "Tu as reçu une invitation à rejoindre une communauté sur Spotlo.",
-        place: "On t'a partagé un lieu sur Spotlo.",
-        visit: "On t'a partagé une visite sur Spotlo.",
-        album: "On t'a partagé un carnet sur Spotlo."
-      };
-      if (type && leads[type]) document.getElementById("lead").textContent = leads[type];
+      document.getElementById("lead").textContent = (type && S.leads[type]) ? S.leads[type] : S.leadDefault;
+      document.getElementById("openBtn").textContent = S.open;
+      document.getElementById("storeBtn").textContent = S.store;
+      document.getElementById("codelabel").textContent = S.codeLabel;
+      document.getElementById("copied").textContent = S.copied;
 
       var scheme = "spotlo://";
       if (token && type) {
@@ -133,9 +184,7 @@
         setTimeout(fallback, 1600);
       });
 
-      document.getElementById("hint").textContent = token
-        ? "Pas encore l'app ? Installe-la, puis rouvre ce lien ou saisis ce code dans l'app."
-        : "Si l'app est installée, elle s'ouvre toute seule.";
+      document.getElementById("hint").textContent = token ? S.hintInstall : S.hintInstalled;
     })();
   </script>
 </body>
