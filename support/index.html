@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Spotlo</title>
+  <style>
+    :root { --blue: #0A6E97; --ink: #111; --muted: #667; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fff; color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .card { width: 100%; max-width: 380px; text-align: center; }
+    .pin { width: 84px; height: 110px; margin: 0 auto 20px; display: block; }
+    h1 { font-size: 26px; margin: 0 0 10px; }
+    p.lead { color: var(--muted); font-size: 16px; margin: 0 0 28px; line-height: 1.5; }
+    .btn {
+      display: block; width: 100%; text-decoration: none;
+      border-radius: 12px; padding: 15px 16px; font-size: 16px; font-weight: 700;
+      margin: 10px 0; cursor: pointer; border: none;
+      background: var(--blue); color: #fff;
+    }
+    .emaillabel { color: var(--muted); font-size: 13px; margin: 18px 0 4px; }
+    .email { color: var(--blue); font-size: 15px; font-weight: 600; text-decoration: none; }
+    .wordmark { font-weight: 800; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="pin" viewBox="0 0 84 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M42 2C20.5 2 3 19.5 3 41c0 27 39 67 39 67s39-40 39-67C81 19.5 63.5 2 42 2z" fill="#0A6E97"/>
+      <text x="42" y="54" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="42" font-weight="800" fill="#fff">S</text>
+    </svg>
+
+    <h1><span class="wordmark">Spotlo</span></h1>
+    <p class="lead" id="lead"></p>
+
+    <a class="btn" id="mailBtn" href="mailto:contact@key-stone.fr?subject=Spotlo"></a>
+
+    <p class="emaillabel" id="emaillabel"></p>
+    <a class="email" id="email" href="mailto:contact@key-stone.fr?subject=Spotlo">contact@key-stone.fr</a>
+  </div>
+
+  <script>
+    (function () {
+      var STR = {
+        fr: {
+          title: "Spotlo — Aide",
+          h1: "Aide et support",
+          lead: "Une question, un souci ou une idée ? On te répond.",
+          btn: "Nous écrire",
+          emailLabel: "Ou écris directement à"
+        },
+        en: {
+          title: "Spotlo — Support",
+          h1: "Help & support",
+          lead: "A question, an issue or an idea? We'll get back to you.",
+          btn: "Email us",
+          emailLabel: "Or write directly to"
+        },
+        it: {
+          title: "Spotlo — Assistenza",
+          h1: "Aiuto e assistenza",
+          lead: "Una domanda, un problema o un'idea? Ti rispondiamo.",
+          btn: "Scrivici",
+          emailLabel: "Oppure scrivi direttamente a"
+        }
+      };
+      var nav = (navigator.language || navigator.userLanguage || "fr").toLowerCase();
+      var lang = nav.indexOf("fr") === 0 ? "fr" : nav.indexOf("it") === 0 ? "it" : "en";
+      var S = STR[lang];
+      document.documentElement.lang = lang;
+      document.title = S.title;
+      document.getElementById("lead").textContent = S.lead;
+      document.getElementById("mailBtn").textContent = S.btn;
+      document.getElementById("emaillabel").textContent = S.emailLabel;
+    })();
+  </script>
+</body>
+</html>
