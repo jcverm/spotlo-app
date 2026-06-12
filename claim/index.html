@@ -63,10 +63,8 @@
 
   <script>
     (function () {
-      // --- A REMPLACER apres publication sur l'App Store ---
-      var APP_STORE_URL = "https://apps.apple.com/app/idXXXXXXXXXX";
-      var STORE_READY = false; // passe a true quand APP_STORE_URL est le vrai lien
-      // -----------------------------------------------------
+      var APP_STORE_URL = "https://apps.apple.com/app/id6778313920";
+      var STORE_READY = true; // lien App Store reel, redirection active
 
       var STR = {
         fr: {
@@ -146,8 +144,6 @@
         e.preventDefault(); goStore();
       });
 
-      // Code affiche, copiable. Sert au premier install : le lien d'origine
-      // n'est pas transmis a l'app installee depuis l'App Store.
       if (token) {
         var codeBtn = document.getElementById("codeBtn");
         codeBtn.textContent = token;
@@ -166,14 +162,12 @@
         });
       }
 
-      // Tentative d'ouverture automatique de l'app.
       var fellBack = false;
       function fallback() {
         if (fellBack) return;
         fellBack = true;
         if (STORE_READY) goStore();
       }
-      // Si la page passe en arriere-plan, l'app s'est ouverte : on annule le repli.
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) fellBack = true;
       });
