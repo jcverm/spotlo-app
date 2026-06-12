@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Spotlo</title>
+  <style>
+    :root { --blue: #0A6E97; --ink: #111; --muted: #667; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fff; color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .card { width: 100%; max-width: 380px; text-align: center; }
+    .pin { width: 84px; height: 110px; margin: 0 auto 20px; display: block; }
+    h1 { font-size: 28px; margin: 0 0 6px; }
+    p.lead { color: var(--muted); font-size: 16px; margin: 0 0 28px; line-height: 1.4; }
+    .btn {
+      display: block; width: 100%; text-decoration: none;
+      border-radius: 12px; padding: 15px 16px; font-size: 16px; font-weight: 700;
+      margin: 10px 0; cursor: pointer; border: none;
+    }
+    .primary { background: var(--blue); color: #fff; }
+    .wordmark { font-weight: 800; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="pin" viewBox="0 0 84 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M42 2C20 2 2 20 2 42c0 28 40 66 40 66s40-38 40-66C82 20 64 2 42 2z" fill="#0A6E97"/>
+      <text x="42" y="54" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="34" font-weight="800" fill="#fff">S</text>
+    </svg>
+    <h1 class="wordmark">Spotlo</h1>
+    <p class="lead" id="lead">Email confirmé. Ouvre Spotlo et connecte-toi.</p>
+    <a class="btn primary" id="open" href="spotlo://">Ouvrir Spotlo</a>
+  </div>
+
+  <script>
+    var L = (navigator.language || "fr").slice(0,2).toLowerCase();
+    var T = {
+      fr: { lead:"Email confirmé. Ouvre Spotlo et connecte-toi.", open:"Ouvrir Spotlo" },
+      en: { lead:"Email confirmed. Open Spotlo and sign in.", open:"Open Spotlo" },
+      it: { lead:"Email confermata. Apri Spotlo e accedi.", open:"Apri Spotlo" }
+    };
+    var tr = T[L] || T.fr;
+    document.documentElement.lang = T[L] ? L : "fr";
+    document.getElementById("lead").textContent = tr.lead;
+    document.getElementById("open").textContent = tr.open;
+  </script>
+</body>
+</html>
