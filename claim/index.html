@@ -29,13 +29,13 @@
     h1 { font-size: 28px; margin: 0 0 6px; }
     p.lead { color: var(--muted); font-size: 16px; margin: 0 0 28px; line-height: 1.4; }
     .btn {
-      display: block; width: 100%; text-decoration: none;
+      display: block; width: 100%; text-decoration: none; text-align: center;
       border-radius: 12px; padding: 15px 16px; font-size: 16px; font-weight: 700;
       margin: 10px 0; cursor: pointer; border: none;
     }
     .primary { background: var(--blue); color: #fff; }
     .ghost { background: #fff; color: var(--blue); border: 1px solid var(--blue); }
-    .codewrap { margin: 18px 0 4px; }
+    .codewrap { margin: 22px 0 4px; }
     .codelabel { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
     .code {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -57,27 +57,22 @@
     </svg>
 
     <h1><span class="wordmark">Spotlo</span></h1>
-    <p class="lead" id="lead"></p>
+    <p class="lead" id="lead">On t'a partagé quelque chose sur Spotlo.</p>
 
-    <a class="btn primary" id="openBtn" href="#"></a>
-    <a class="btn ghost" id="storeBtn" href="#"></a>
+    <a class="btn primary" id="openBtn" href="spotlo://claim">Ouvrir dans Spotlo</a>
+    <a class="btn ghost" id="storeBtn" href="https://apps.apple.com/app/id6778313920">Télécharger sur l'App Store</a>
 
     <div class="codewrap" id="codewrap" style="display:none;">
-      <p class="codelabel" id="codelabel"></p>
+      <p class="codelabel" id="codelabel">Ton code</p>
       <button class="code" id="codeBtn" type="button"></button>
-      <p class="copied" id="copied"></p>
+      <p class="copied" id="copied">Copié</p>
     </div>
 
-    <p class="hint" id="hint"></p>
+    <p class="hint" id="hint">Pas encore l'app ? Installe-la, puis saisis ce code dans l'app.</p>
   </div>
 
   <script>
-    (function () {
-      // --- A REMPLACER apres publication sur l'App Store ---
-      var APP_STORE_URL = "https://apps.apple.com/app/id6778313920";
-      var STORE_READY = true; // lien App Store reel, redirection active
-      // -----------------------------------------------------
-
+    try {
       var STR = {
         fr: {
           leadDefault: "On t'a partagé quelque chose sur Spotlo.",
@@ -91,8 +86,7 @@
           store: "Télécharger sur l'App Store",
           codeLabel: "Ton code",
           copied: "Copié",
-          hintInstalled: "Si l'app est installée, elle s'ouvre toute seule.",
-          hintInstall: "Pas encore l'app ? Installe-la, puis rouvre ce lien ou saisis ce code dans l'app."
+          hint: "Pas encore l'app ? Installe-la, puis saisis ce code dans l'app."
         },
         en: {
           leadDefault: "Something was shared with you on Spotlo.",
@@ -106,8 +100,7 @@
           store: "Download on the App Store",
           codeLabel: "Your code",
           copied: "Copied",
-          hintInstalled: "If the app is installed, it opens on its own.",
-          hintInstall: "Don't have the app yet? Install it, then reopen this link or enter this code in the app."
+          hint: "Don't have the app yet? Install it, then enter this code in the app."
         },
         it: {
           leadDefault: "Ti è stato condiviso qualcosa su Spotlo.",
@@ -121,12 +114,11 @@
           store: "Scarica su App Store",
           codeLabel: "Il tuo codice",
           copied: "Copiato",
-          hintInstalled: "Se l'app è installata, si apre da sola.",
-          hintInstall: "Non hai ancora l'app? Installala, poi riapri questo link o inserisci questo codice nell'app."
+          hint: "Non hai ancora l'app? Installala, poi inserisci questo codice nell'app."
         }
       };
 
-      var nav = (navigator.language || navigator.userLanguage || "fr").toLowerCase();
+      var nav = (navigator.language || "fr").toLowerCase();
       var lang = nav.indexOf("fr") === 0 ? "fr" : nav.indexOf("it") === 0 ? "it" : "en";
       var S = STR[lang];
       document.documentElement.lang = lang;
@@ -139,4 +131,36 @@
       document.getElementById("openBtn").textContent = S.open;
       document.getElementById("storeBtn").textContent = S.store;
       document.getElementById("codelabel").textContent = S.codeLabel;
-      document.getElementById("copied").tex
+      document.getElementById("copied").textContent = S.copied;
+      document.getElementById("hint").textContent = S.hint;
+
+      if (token && type) {
+        document.getElementById("openBtn").setAttribute(
+          "href",
+          "spotlo://claim?type=" + encodeURIComponent(type) + "&token=" + encodeURIComponent(token)
+        );
+      }
+
+      if (token) {
+        var codeBtn = document.getElementById("codeBtn");
+        codeBtn.textContent = token;
+        document.getElementById("codewrap").style.display = "block";
+        codeBtn.addEventListener("click", function () {
+          function done() {
+            var c = document.getElementById("copied");
+            c.classList.add("show");
+            setTimeout(function () { c.classList.remove("show"); }, 1500);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(token).then(done).catch(done);
+          } else {
+            done();
+          }
+        });
+      }
+    } catch (e) {
+      // Si le JS casse, la page reste utilisable : textes en dur et bouton App Store actif.
+    }
+  </script>
+</body>
+</html>
