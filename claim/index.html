@@ -65,7 +65,8 @@
     <p class="lead" id="lead">On t'a partagé quelque chose sur Spotlo.</p>
 
     <a class="btn primary" id="openBtn" href="spotlo://claim">Ouvrir dans Spotlo</a>
-    <a class="btn ghost" id="storeBtn" href="https://apps.apple.com/app/id6778313920">Télécharger sur l'App Store</a>
+    <a class="btn ghost" id="iosBtn" href="https://apps.apple.com/app/id6778313920">Télécharger sur l'App Store</a>
+    <a class="btn ghost" id="androidBtn" href="https://play.google.com/store/apps/details?id=com.spotlo.app">Télécharger sur Google Play</a>
 
     <div class="codewrap" id="codewrap" style="display:none;">
       <p class="codelabel" id="codelabel">Ton code</p>
@@ -88,7 +89,8 @@
             album: "On t'a partagé un carnet sur Spotlo."
           },
           open: "Ouvrir dans Spotlo",
-          store: "Télécharger sur l'App Store",
+          storeIos: "Télécharger sur l'App Store",
+          storeAndroid: "Télécharger sur Google Play",
           codeLabel: "Ton code",
           copied: "Copié",
           hint: "Pas encore l'app ? Installe-la, puis saisis ce code dans l'app."
@@ -102,7 +104,8 @@
             album: "A notebook was shared with you on Spotlo."
           },
           open: "Open in Spotlo",
-          store: "Download on the App Store",
+          storeIos: "Download on the App Store",
+          storeAndroid: "Get it on Google Play",
           codeLabel: "Your code",
           copied: "Copied",
           hint: "Don't have the app yet? Install it, then enter this code in the app."
@@ -116,7 +119,8 @@
             album: "Ti è stato condiviso un taccuino su Spotlo."
           },
           open: "Apri in Spotlo",
-          store: "Scarica su App Store",
+          storeIos: "Scarica su App Store",
+          storeAndroid: "Scarica su Google Play",
           codeLabel: "Il tuo codice",
           copied: "Copiato",
           hint: "Non hai ancora l'app? Installala, poi inserisci questo codice nell'app."
@@ -134,7 +138,20 @@
 
       document.getElementById("lead").textContent = (type && S.leads[type]) ? S.leads[type] : S.leadDefault;
       document.getElementById("openBtn").textContent = S.open;
-      document.getElementById("storeBtn").textContent = S.store;
+
+      var iosBtn = document.getElementById("iosBtn");
+      var androidBtn = document.getElementById("androidBtn");
+      iosBtn.textContent = S.storeIos;
+      androidBtn.textContent = S.storeAndroid;
+
+      // Détection de l'OS : on montre le store pertinent, on cache l'autre.
+      // Si l'OS n'est pas reconnu (desktop), les deux boutons restent visibles.
+      var ua = (navigator.userAgent || navigator.vendor || "").toLowerCase();
+      var isAndroid = ua.indexOf("android") > -1;
+      var isIOS = /iphone|ipad|ipod/.test(ua);
+      if (isAndroid) { iosBtn.style.display = "none"; }
+      else if (isIOS) { androidBtn.style.display = "none"; }
+
       document.getElementById("codelabel").textContent = S.codeLabel;
       document.getElementById("copied").textContent = S.copied;
       document.getElementById("hint").textContent = S.hint;
@@ -164,7 +181,7 @@
         });
       }
     } catch (e) {
-      // Si le JS casse, la page reste utilisable : textes en dur et bouton App Store actif.
+      // Si le JS casse, la page reste utilisable : textes en dur et les deux boutons de store actifs.
     }
   </script>
 </body>
